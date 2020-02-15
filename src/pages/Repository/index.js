@@ -7,7 +7,14 @@ import { Link } from 'react-router-dom';
 import api from '../../services/api';
 
 import Container from '../../components/Container';
-import { Loading, Owner, IssueList } from './styles';
+import {
+  Loading,
+  Owner,
+  IssueList,
+  DropDown,
+  StateOption,
+  PageActions,
+} from './styles';
 
 export default class Repository extends Component {
   static propTypes = {
@@ -22,6 +29,8 @@ export default class Repository extends Component {
     repository: {},
     issues: [],
     loading: true,
+    issueState: 'open',
+    page: 1,
   };
 
   async componentDidMount() {
@@ -46,8 +55,39 @@ export default class Repository extends Component {
     });
   }
 
+  handleChange = async event => {
+    const issueState = event.target.value;
+    await this.setState({ issueState });
+    this.loadIssues();
+  };
+
+  handlePage = async action => {
+    const { page } = this.state;
+    await this.setState({
+      page: action === 'back' ? page - 1 : page + 1,
+    });
+    this.loadIssues();
+  };
+
+  loadIssues = async () => {
+    const { match } = this.props;
+    const { issueState, page } = this.state;
+
+    const repoName = decodeURIComponent(match.params.repository);
+
+    const response = await api.get(`/repos/${repoName}/issues`, {
+      params: {
+        state: issueState,
+        per_page: 5,
+        page,
+      },
+    });
+
+    this.setState({ issues: response.data });
+  };
+
   render() {
-    const { repository, issues, loading } = this.state;
+    const { repository, issues, loading, issueState, page } = this.state;
 
     if (loading) {
       return <Loading>Carregando</Loading>;
@@ -63,6 +103,15 @@ export default class Repository extends Component {
         </Owner>
 
         <IssueList>
+          <StateOption className="list">
+            <span>Issue state </span>
+            <DropDown value={issueState} onChange={this.handleChange}>
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+              <option value="all">All</option>
+            </DropDown>
+          </StateOption>
+
           {issues.map(issue => (
             <li key={String(issue.id)}>
               <img src={issue.user.avatar_url} alt={issue.user.login} />
@@ -78,6 +127,20 @@ export default class Repository extends Component {
             </li>
           ))}
         </IssueList>
+
+        <PageActions>
+          <button
+            type="button"
+            disabled={page < 2}
+            onClick={() => this.handlePage('back')}
+          >
+            Anterior
+          </button>
+          <span>Página {page}</span>
+          <button type="button" onClick={() => this.handlePage('next')}>
+            Próximo
+          </button>
+        </PageActions>
       </Container>
     );
   }

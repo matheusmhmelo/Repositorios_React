@@ -44,7 +44,7 @@ export const Owner = styled.header`
 
 export const IssueList = styled.ul`
   padding-top: 30px;
-  margin-top: 30px;
+  margin-top: 10px;
   border-top: 1px solid #eee;
   list-style: none;
 
@@ -98,6 +98,52 @@ export const IssueList = styled.ul`
         font-size: 12px;
         color: #999;
       }
+    }
+  }
+`;
+
+export const DropDown = styled.select`
+  position: relative;
+  display: flex;
+  margin-bottom: 10px;
+  width: 150px;
+  height: 30px;
+  color: #7159c1;
+  font-size: 14px;
+`;
+
+export const StateOption = styled.div`
+  margin-left: 65%;
+  display: flex;
+  margin-bottom: 15px;
+  width: 350px;
+  height: 30px;
+  flex-direction: row;
+  align-items: center;
+
+  span {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    color: #7159c1;
+    font-size: 14px;
+  }
+`;
+
+export const PageActions = styled.div`
+  padding-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  button {
+    transition: opacity 0.25s ease-out;
+    border-radius: 4px;
+    outline: 0;
+    border: 0;
+    padding: 8px;
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
     }
   }
 `;
