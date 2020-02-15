@@ -10,7 +10,7 @@
 1. Faça um clone desse repositório;
 2. Entre na pasta rodando `cd Repositorios_React`;
 3. Rode `yarn` para instalar as dependências;
-4. Rode `yarn dev` para iniciar o servidor.
+4. Rode `yarn start` para iniciar o servidor.
 
 ## Ferramentas e Tecnologias
 
